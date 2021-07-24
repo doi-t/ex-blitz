@@ -2,14 +2,19 @@
   "name": "ex-blitz",
   "version": "1.0.0",
   "scripts": {
-    "dev": "blitz dev",
+    "dev": "docker-compose up -d && blitz dev",
     "build": "blitz build",
     "start": "blitz start",
     "studio": "blitz prisma studio",
     "lint": "eslint --ignore-path .gitignore --ext .js,.ts,.tsx .",
     "test": "jest",
     "test:watch": "jest --watch",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "db:migrate-create-only": "yarn blitz prisma migrate dev --create-only",
+    "db:migrate-apply": "yarn blitz prisma migrate dev",
+    "db:rebuild": "docker-compose rm db && docker-compose up -d && yarn blitz prisma migrate dev",
+    "db:connect": "PGPASSWORD=password psql --host=localhost -p 5432 --username=root --dbname=my_db -P pager",
+    "db:logs": "docker logs $(docker ps -qf 'name=db') -f"
   },
   "prisma": {
     "schema": "db/schema.prisma"
