@@ -1,0 +1,26 @@
+version: "3.7"
+networks:
+  my-network:
+services:
+  db:
+    container_name: my-db
+    image: postgres:latest
+    volumes:
+      - ./db/init:/docker-entrypoint-initdb.d
+    env_file: ./.env.local
+    ports:
+      - "5432:5432"
+    hostname: postgres
+    user: root
+    command: postgres -c log_destination=stderr -c log_statement=all -c log_connections=on -c log_disconnections=on
+    logging:
+      options:
+        max-size: "10k"
+        max-file: "5"
+    networks:
+      my-network:
+        aliases:
+          - my-db.local
+
+volumes:
+  data:
